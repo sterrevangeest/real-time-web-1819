@@ -1,10 +1,11 @@
 **🎓 Real-Time Web @cmda-minor-web · 2018-2019**
 
-## Real Time Chat App 💬
+## Real Time Emoji Chat App 💬
 
-Link to application:
+With this application users chat. If a word in the messages suits a emoji, the emoji will replace the word.
+![screenshot](screenshot.png)
 
-## install
+## Install
 
 ```
 git clone https://github.com/sterrevangeest/real-time-web-1819
