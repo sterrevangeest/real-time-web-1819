@@ -1,6 +1,164 @@
 **🎓 Real-Time Web @cmda-minor-web · 2018-2019**
 
-## Real Time Emoji Chat App 💬
+## NS Reismaatje
+
+### Concept
+
+Het gebeurt mij best vaak dat ik op mijn "eindstation" uitstap en een bekende tegenkom. Dan is het jammer dat je al die tijd in dezelfde trein hebt gezeten maar elkaar niet heb kunnen spreken. Met deze app wil ik de gebruiker laten zien welke bekende op dat moment in ook in de trein zit.
+
+##### Schets
+
+Dat wil ik er ongeveer zo uit laten zien:
+
+![schetsen](schetsen2.png)
+
+### API
+
+Voor deze app gebruik ik de [NS API](https://www.ns.nl/reisinformatie/ns-api). In deze API kan ik o.a. data vinden over:
+
+- Actuele vertrektijden
+- Storingen en werkzaamheden
+- De stationslijst met alle stations in Nederland inclusief Geodata
+- Reisadviezen van station naar station
+
+Voordat je gebruik kunt maken van de API, moet je een account aanmaken en krijg je een key die toegang geeft to de data. Er is een limiet aan het aantal calls dat uitgevoerd mag worden, hoeveel dit er zijn staat nergens gedocumenteerd 🤓.
+
+Deze API is niet real-time, maar dit los ik op door de gebruiker real-time aan te laten geven in welke trein ze zitten.
+
+### Data
+
+##### Data life cycle
+
+Dit is de data life cycle van de app tot nu toe:
+
+![](datacycle.png)
+Toelichting:
+
+1. De gebruiker geeft zijn/haar naam op. Dit wordt verstuurd naar de `server`.
+2. Op de `server` wordt deze naam opgeslagen en wordt er een id gegenereed.
+3. `Mijn server` vraagt aan de `NS API` alle stations op.
+4. Het antwoord wat de `NS API` naar de server stuurt:
+
+   ```js
+   {
+     "links": {},
+     "payload": [
+       {
+         "sporen": [Array],
+         "synoniemen": [],
+         "heeftFaciliteiten": true,
+         "heeftVertrektijden": true,
+         "heeftReisassistentie": false,
+         "code": "AC",
+         "namen": [Object],
+         "stationType": "STOPTREIN_STATION",
+         "land": "NL",
+         "UICCode": "8400047",
+         "lat": 52.2785,
+         "lng": 4.977,
+         "radius": 200,
+         "naderenRadius": 1200,
+         "EVACode": "8400047"
+       }
+       // more results...
+     ]
+   }
+   ```
+
+5. Op de `server` filter ik de data naar onderstaande en stuur dit naar de `client`.
+
+   ```js
+   [
+     { stationName: "Abcoude", stationId: "8400047" }
+     // more results...
+   ];
+   ```
+
+6. De gebruiker stuurt kiest het vetrekpunt uit de lijst met stations.
+7. Voor het gekozen station haalt de `server` de vertrektijden bij dit station op uit de `NS API`.
+8. Antwoord wat de `NS API` naar de `server` stuurt:
+
+   ```js
+   [
+     {
+       links: {},
+       payload: {
+         source: "PPV",
+         departures: [
+           {
+             direction: "Rhenen",
+             name: "NS  7439",
+             plannedDateTime: "2019-04-18T11:33:00+0200",
+             plannedTimeZoneOffset: 120,
+             actualDateTime: "2019-04-18T11:33:00+0200",
+             actualTimeZoneOffset: 120,
+             plannedTrack: "3",
+             product: {
+               number: "7439",
+               categoryCode: "SPR",
+               shortCategoryName: "NS Sprinter",
+               longCategoryName: "Sprinter",
+               operatorCode: "NS",
+               operatorName: "NS",
+               type: "TRAIN"
+             },
+             trainCategory: "SPR",
+             cancelled: false,
+             routeStations: [
+               {
+                 uicCode: "8400133",
+                 mediumName: "Breukelen"
+               },
+               {
+                 uicCode: "8400621",
+                 mediumName: "Utrecht C."
+               },
+               {
+                 uicCode: "8400182",
+                 mediumName: "Driebergen-Zeist"
+               },
+               {
+                 uicCode: "8400417",
+                 mediumName: "Maarn"
+               }
+             ],
+             departureStatus: "INCOMING"
+           } //more results
+         ]
+       }
+     }
+   ];
+   ```
+
+9. Op de `server` filter ik de data naar onderstaande en stuur dit naar de `client`.
+
+   ```js
+   [
+     {
+       direction: "Rhenen",
+       plannedDateTime: "2019-04-18T11:33:00+0200",
+       trainType: "Sprinter",
+       plannedTrack: "3",
+       tripId: "NS7439"
+     } // more results
+   ];
+   ```
+
+10. De client kiest de treinreis die gemaakt gaat worden.
+11. De `tripId` wordt opgeslagen bij de juiste gebruiker op de `server`.
+12. Alle gebruikers die een overeenkomende `tripId` hebben zien welke reizigers ook in die specifieke trein zitten. En kunnen een bericht naar elkaar versturen.
+
+### Feedback
+
+Ik wil graag feedback op mijn data life cycle:
+ik denk dat de laatste stap namelijk nog niet helemaal compleet is. Dit komt omdat ik nog niet zo heel goed weet hoe ik mijn code voor die functionaliteit er uit ga laten zien.
+
+---
+
+#### Week 1: Real Time Emoji Chat App 💬
+
+<details>
+<summary>Week 1 chatapp</summary>
 
 With this application users chat. If a word in the messages suits a emoji, the emoji will replace the word.
 ![screenshot](screenshot.png)
@@ -8,6 +166,7 @@ With this application users chat. If a word in the messages suits a emoji, the e
 ## Install
 
 ```
+
 git clone https://github.com/sterrevangeest/real-time-web-1819
 
 cd project-2-1819
@@ -15,7 +174,31 @@ cd project-2-1819
 npm install
 
 npm run server
+
 ```
+
+## How it works
+
+To create a real time web application I used the [socket.IO](https://socket.io/) library. Socket.IO enables realtime, bi-directional communication between the client-side and server-side.
+
+To start my first real time web app, I follow this [tutorial](https://socket.io/get-started/chat/). Later I added extra features. Like replacing words with emoji's.
+
+```js
+// server-side: index.js
+io.on("connection", socket => {
+  socket.on("chat message", msg => {
+    var msg = msg.split(" ").map(word => return emoji.get(word) || word);
+    var msg = msg
+      .toString()
+      .replace(/,/g, " ")
+      .replace(/:/g, "");
+    io.emit("chat message", msg);
+  });
+});
+
+```
+
+</details>
 
 <!-- Add a link to your live demo in Github Pages 🌐-->
 
