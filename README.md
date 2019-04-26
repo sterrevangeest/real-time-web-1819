@@ -31,12 +31,17 @@ Deze API is niet real-time, maar dit los ik op door de gebruiker real-time aan t
 
 Dit is de data life cycle van de app tot nu toe:
 
-![](datacycle.png)
+![](updatedatacycle.png)
+
 Toelichting:
 
-1. De gebruiker geeft zijn/haar naam op. Dit wordt verstuurd naar de `server`.
-2. Op de `server` wordt deze naam opgeslagen en wordt er een id gegenereed.
-3. `Mijn server` vraagt aan de `NS API` alle stations op.
+1. De gebruiker geeft een aantal gegevens door om aan te kunnen melden. Dit wordt verstuurd naar de `server`.
+2. Op de `server` wordt deze data opgeslagen.
+   <details>
+    <summary>De gebruiker kan een vriend toevoegen aan zijn/haar profiel. Dat ziet er zo uit:</summary>
+    ![](vrienduitnodigen.png)
+    </details>
+3. De `server` vraagt aan de `NS API` alle stations op.
 4. Het antwoord wat de `NS API` naar de server stuurt:
 
    ```js
@@ -74,7 +79,7 @@ Toelichting:
    ];
    ```
 
-6. De gebruiker stuurt kiest het vetrekpunt uit de lijst met stations.
+6. De gebruiker stuurt kiest het vetrekpunt uit de lijst met stations, dit wordt opgeslagen op de `server`.
 7. Voor het gekozen station haalt de `server` de vertrektijden bij dit station op uit de `NS API`.
 8. Antwoord wat de `NS API` naar de `server` stuurt:
 
@@ -130,7 +135,7 @@ Toelichting:
    ];
    ```
 
-9. Op de `server` filter ik de data naar onderstaande en stuur dit naar de `client`.
+9. Op de `server` wordt de data gefilterd naar onderstaande en wordt gestuurd naar de `client`.
 
    ```js
    [
@@ -144,14 +149,36 @@ Toelichting:
    ];
    ```
 
-10. De client kiest de treinreis die gemaakt gaat worden.
+10. De client kiest de treinreis die hij/zij gaat maken.
 11. De `tripId` wordt opgeslagen bij de juiste gebruiker op de `server`.
-12. Alle gebruikers die een overeenkomende `tripId` hebben zien welke reizigers ook in die specifieke trein zitten. En kunnen een bericht naar elkaar versturen.
+12. Alle gebruikers die een overeenkomende `tripId` hebben zien welke reizigers ook in die specifieke trein zitten. Waneer er vrienden in dezelfde trein zitten kunnen zij direct chatten. Nog niet bevriende gebruikers kunnen elkaar uitnodigen en dan alsnog chatten.
 
-### Feedback
+De structuur in de database komt er zo uit te zien:
 
-Ik wil graag feedback op mijn data life cycle:
-ik denk dat de laatste stap namelijk nog niet helemaal compleet is. Dit komt omdat ik nog niet zo heel goed weet hoe ik mijn code voor die functionaliteit er uit ga laten zien.
+```js
+[
+  {
+    voornaam: "string",
+    achternaam: "string",
+    gebruikersnaam: "string",
+    wachtwoord: "hash",
+    vrienden: [
+      {
+        gebruikersnaam: "string"
+      }
+    ],
+    reis: [
+      {
+        direction: "string",
+        plannedDateTime: "string",
+        trainType: "string",
+        plannedTrack: "string",
+        tripId: "string"
+      }
+    ]
+  }
+];
+```
 
 ---
 
