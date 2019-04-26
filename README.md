@@ -37,10 +37,9 @@ Toelichting:
 
 1. De gebruiker geeft een aantal gegevens door om aan te kunnen melden. Dit wordt verstuurd naar de `server`.
 2. Op de `server` wordt deze data opgeslagen.
-   <details>
-    <summary>De gebruiker kan een vriend toevoegen aan zijn/haar profiel. Dat ziet er zo uit:</summary>
-    ![d](vrienduitnodigen.png)
-    </details>
+   <details><summary>De gebruiker kan een vriend toevoegen aan zijn/haar profiel. Dat ziet er zo uit:</summary>
+   Data:
+    ![d](vrienduitnodigen.png)</details>
 3. De `server` vraagt aan de `NS API` alle stations op.
 4. Het antwoord wat de `NS API` naar de server stuurt:
 
