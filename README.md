@@ -10,7 +10,7 @@ Het gebeurt mij best vaak dat ik op mijn "eindstation" uitstap en een bekende te
 
 Dat wil ik er ongeveer zo uit laten zien:
 
-![schetsen](schetsen2.png)
+![schetsen](schetsen3.png)
 
 ### API
 
@@ -39,7 +39,7 @@ Toelichting:
 2. Op de `server` wordt deze data opgeslagen.
    <details>
     <summary>De gebruiker kan een vriend toevoegen aan zijn/haar profiel. Dat ziet er zo uit:</summary>
-    ![](vrienduitnodigen.png)
+    ![d](vrienduitnodigen.png)
     </details>
 3. De `server` vraagt aan de `NS API` alle stations op.
 4. Het antwoord wat de `NS API` naar de server stuurt:
