@@ -12,11 +12,6 @@ let io = require("socket.io")(http);
 var request = require("request");
 var bodyParser = require("body-parser");
 
-const secret = "abcdefg";
-
-const hash = crypto.createHmac("sha256", secret).digest("hex");
-console.log(hash);
-
 var users = [
   {
     voornaam: "Henk",
