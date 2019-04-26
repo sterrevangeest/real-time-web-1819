@@ -31,7 +31,7 @@ Deze API is niet real-time, maar dit los ik op door de gebruiker real-time aan t
 
 Dit is de data life cycle van de app tot nu toe:
 
-![](datacycle.png)
+![](updatedDataLifeCycle.png)
 Toelichting:
 
 1. De gebruiker geeft zijn/haar naam op. Dit wordt verstuurd naar de `server`.
