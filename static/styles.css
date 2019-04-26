@@ -1,75 +1,126 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+html {
+  margin: 1em;
 }
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  background-color: #f2f3f4;
+    sans-serif; */
+  font-family: nssans;
+  max-width: 50em;
+  background-color: #ffc917;
+  margin: 0 auto;
+  color: #003082;
 }
-form {
+
+a {
+  display: inline-block;
+  background: white;
+  padding: 1em;
+  text-decoration: none;
+  color: inherit;
+  margin: 0.3em 0;
+  margin-right: 5em;
+}
+
+select {
+  display: block;
+  width: 100%;
+  font-size: 1em;
+  padding: 2em;
+  height: 3em;
+  border: none;
+  border-radius: 1px;
+  font-family: inherit;
+  font-weight: 800;
+  margin: 1em 0;
+}
+
+button,
+.button {
+  font-family: inherit;
+  border: none;
+  font-size: inherit;
+  padding: 1em 2em;
+  border-radius: 0.1em;
+  box-shadow: inset 0 -0.125rem 0 #004ba0;
+  background-color: #0063d3;
+  color: white;
+  display: block;
+  text-align: center;
+}
+.button {
+  width: auto;
+  max-width: 5em;
+}
+
+.reis {
   position: absolute;
   bottom: 0;
-  right: 0;
-  padding: 3em;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  width: 100%;
+  margin-bottom: 1em;
 }
-form input {
-  padding: 1em;
-  width: 100%;
-  border-radius: 10em;
-  /* border: 1px solid grey; */
-  margin-right: 0.5em;
-  border: 0;
+
+article {
   background-color: white;
-  font: inherit;
+  padding: 1em;
+  margin: 1em 0;
 }
-form button {
-  width: 30%;
-  background: #4cd964;
-  border-radius: 3em;
-  border: 0;
+
+article p {
+  display: inline;
+}
+
+article a {
+  border: 1px solid #003082;
+  padding: 0.5em;
+  border-radius: 0.1em;
+  color: inherit;
+  text-decoration: none;
+}
+
+input {
+  display: block;
+  font-size: inherit;
+  border: none;
+  margin: 1em 0;
   padding: 0.5em 0.5em;
-  font: inherit;
+  width: 90%;
+  color: inherit;
+}
+
+form fieldset {
+  padding: 1em 0;
+  border-color: #003082;
+  border: none;
+  //border-bottom: 3px solid rgba(7, 7, 33, 0.2);
+}
+
+/* messages */
+
+.messages {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  margin-bottom: 1em;
+}
+.messages input {
+  border: 0;
+  padding: 10px;
+  width: 20em;
+}
+.messages button {
+  font-size: inherit;
+  border: none;
+  padding: 0.5em 1em;
 }
 #messages {
   list-style-type: none;
   margin: 0;
-  padding: 3em;
+  padding: 0;
 }
 #messages li {
-  display: inline-block;
-  width: auto;
-  margin-right: 60%;
-  //padding: 0.5em 0em;
-  //border-radius: 0.5em;
-  margin-bottom: 0.8rem;
-  //background-color: white;
-  color: black;
-  font-weight: 500;
-  //box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid lightgrey;
-}
-
-#messages span {
-  font-size: 0.8em;
-  display: block;
-  color: grey;
-  padding: 0.5em 0;
+  padding: 1em;
 }
 #messages li:nth-child(odd) {
-  //background: #4cd964;
-}
-
-#messages li.bigSmiley {
-  font-size: 3rem;
-}
-
-#messages li.bigSmiley span {
-  font-size: 0.8rem;
+  background: #fff;
 }

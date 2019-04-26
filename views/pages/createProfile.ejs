@@ -1,0 +1,36 @@
+<!-- views/pages/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+</head>
+<body>
+  <h1>Aanmelden</h1>
+
+<form class="" action="profile" method="post">
+  <fieldset>
+    <label for="voornaam">Voornaam*:
+    <input type="text" id="voornaam" name="voornaam" required></label>
+    <label for="achternaam">Achternaam:
+    <input type="text" id="achternaam" name="achternaam"></label>
+  </fieldset>
+  <fieldset>
+    <label for="gebruikersnaam">Gebruikersnaam:
+    <input type="text" id="gebruikersnaam" name="gebruikersnaam"></label>
+    <%if (data) { %>
+      <p><%= data%></p>
+    <% } %>
+    <label for="password">Wachtwoord:
+    <input type="password" id="password" name="password"></label>
+  </fieldset>
+  <p>*verplicht veld</p>
+<button type="submit">Maak account aan</button>
+</form>
+</body>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- <script src="index.js"></script> -->
+
+</html>

@@ -19,11 +19,17 @@
   },
   "homepage": "https://github.com/sterrevangeest/real-time-web-1819#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "dotenv": "^7.0.0",
     "ejs": "^2.6.1",
     "emoji-replace": "^1.0.1",
     "express": "^4.16.4",
+    "flickrapi": "^0.6.0",
     "node-emoji": "^1.10.0",
+    "node-fetch": "^2.3.0",
+    "node-ns-api": "0.0.3",
+    "ns-api": "^2.0.8",
+    "request": "^2.88.0",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
