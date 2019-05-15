@@ -178,6 +178,32 @@ De structuur in de database komt er zo uit te zien:
 ];
 ```
 
+```js
+io.on("connection", socket => {
+  socket.on("join", data => {
+    socket.join(data.room);
+    io.in(data.room).emit("message", `New user joined ${data.room} room!`);
+  });
+  socket.on("message", data => {
+    console.log("msg " + data.msg);
+    io.in(data.room).emit("message", data.msg);
+  });
+
+  socket.on("disconnect", data => {
+    console.log("user disconnected");
+    io.in(data.room).emit("message", "user disconnected");
+    io.emit("message", "user disconnected");
+  });
+});
+```
+
+### To Do
+
+- [ ] jQuery naar JavaScript
+- [ ] data opslaan in database (bijv. Mongo) ipv lokaal
+- [ ] gebruikers elkaar laten uitnodigen
+- [ ] gebruikers alleen met elkaar laten chatten
+
 ---
 
 #### Week 1: Real Time Emoji Chat App 💬
