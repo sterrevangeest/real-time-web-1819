@@ -1,32 +1,24 @@
-console.log("!");
+console.log("start");
 
-// $(function() {
-//   var socket = io();
-//   $("form").submit(function(e) {
-//     e.preventDefault(); // prevents page reloading
-//     socket.emit("chat message", $("#m").val());
-//     $("#m").val("");
-//     return false;
-//   });
-//   socket.on("chat message", function(msg) {
-//     $("#messages").append($("<li>").text(msg));
-//   });
+// form.submit(function(e) {
+//   e.preventDefault();
 // });
 
-const room = "<%= data %>";
-const socket = io("/tech");
-$("form").submit(() => {
-  let msg = $("#m").val();
-  socket.emit("message", { msg, room });
-  $("#m").val("");
+$(".vrienduitnodigen").submit(function(e) {
+  console.log("vriend uitnodigen");
+  e.preventDefault(); // prevents page reloading
   return false;
 });
 
-socket.on("connect", () => {
-  // emiting to everybody
-  socket.emit("join", { room: room });
-});
-
-socket.on("message", msg => {
-  $("#messages").append($("<li>").text(msg));
-});
+function submitForm(input) {
+  var form = document.querySelector(".vrienduitnodigen");
+  var input = form.querySelector("input");
+  console.log("vriend uitnodigen");
+  var http = new XMLHttpRequest();
+  var email = input.value;
+  console.log(email);
+  http.open("POST", "/vrienduitnodigen/" + email, true);
+  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  console.log(http);
+  http.send();
+}
