@@ -93,6 +93,7 @@ app.post("/login", (req, res) => {
   console.log("inloggen");
   var email = req.body.email;
   var password = req.body.password;
+  console.log(email);
   console.log("database", db);
 
   db.collection("profiles").findOne(
@@ -108,23 +109,23 @@ app.post("/login", (req, res) => {
 
   function done(err, user) {
     console.log("ingelogde gebruiker", user);
-    if (!req.session.user) {
-      console.log("nog geen session: dus maak aan");
-      req.session.user = { user };
-      console.log(req.session.user);
-    } else {
-      console.log("er is wel een session");
-      console.log(req.session.user.user.inviteby);
-    }
+    // if (!req.session.user) {
+    //   console.log("nog geen session: dus maak aan");
+    //   req.session.user = { user };
+    //   console.log(req.session.user);
+    // } else {
+    //   console.log("er is wel een session");
+    //   console.log(req.session.user.user.inviteby);
+    // }
 
     res.render("../views/pages/profile.ejs", {
-      user: req.session.user.user,
+      user: user,
       data: results,
-      friends: req.session.user.user.vrienden
-        ? req.session.user.user.vrienden
+      friends: user.vrienden
+        ? user.vrienden
         : [{ name: "Je hebt nog geen vrienden :(" }],
-      invite: req.session.user.user.inviteby
-        ? req.session.user.user.inviteby
+      invite: user.inviteby
+        ? user.inviteby
         : [{ name: "Je hebt geen uitnodigingen..." }]
     });
     //
