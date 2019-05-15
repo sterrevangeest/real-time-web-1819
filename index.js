@@ -70,7 +70,8 @@ app.use(
 );
 
 var db = null;
-var url = "mongodb://" + process.env.DB_HOST + ":" + process.env.DB_PORT;
+var url =
+  "mongodb+srv://sterrevangeest:J7_FBnFU-FcqTDh@real-time-web-ipuyv.mongodb.net/test?retryWrites=true";
 
 mongo.MongoClient.connect(
   url,
@@ -80,7 +81,7 @@ mongo.MongoClient.connect(
     } else {
       console.log("gelukt?");
     }
-    db = client.db(process.env.DB_NAME);
+    db = client.db("real-time-web");
   }
 );
 //end
@@ -92,6 +93,7 @@ app.post("/login", (req, res) => {
   console.log("inloggen");
   var email = req.body.email;
   var password = req.body.password;
+  console.log("database", db);
 
   db.collection("profiles").findOne(
     {
@@ -99,6 +101,11 @@ app.post("/login", (req, res) => {
     },
     done
   );
+
+  function done(err, user) {
+    console.log(user);
+  }
+
   function done(err, user) {
     console.log("ingelogde gebruiker", user);
     if (!req.session.user) {
@@ -107,7 +114,7 @@ app.post("/login", (req, res) => {
       console.log(req.session.user);
     } else {
       console.log("er is wel een session");
-      console.log(req.session.user);
+      console.log(req.session.user.user.inviteby);
     }
 
     res.render("../views/pages/profile.ejs", {
@@ -116,8 +123,8 @@ app.post("/login", (req, res) => {
       friends: req.session.user.user.vrienden
         ? req.session.user.user.vrienden
         : [{ name: "Je hebt nog geen vrienden :(" }],
-      invite: req.session.user.user.invite
-        ? req.session.user.user.invite
+      invite: req.session.user.user.inviteby
+        ? req.session.user.user.inviteby
         : [{ name: "Je hebt geen uitnodigingen..." }]
     });
     //
