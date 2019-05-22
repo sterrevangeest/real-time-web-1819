@@ -6,11 +6,11 @@
   </head>
   <body>
     <header>
-      <h1>Profiel <%=user.name%></h1>
+      <h1>Profiel van <%=user.name%></h1>
     </header>
     <main>
       <section class="geel">
-        <h2>Een reis maken</h2>
+        <h2>Vind een reismaat</h2>
         <form class="" action="vertrektijden" method="post">
           <label for="stationName">Selecteer vertrek station</label>
           <select id="station" name='stationId'>
@@ -21,15 +21,29 @@
           <button type="submit" >Start</button>
         </form>
       </section>
+      <div class="verzoeken">
+        <p>Vriendschapsverzoeken</p>
+        <form class="vriendschapsverzoek" action="" method="post">
+          <!-- <input type="text" name="friends-email" placeholder="e-mail adres"> -->
+            <% invite.forEach(function(item){  %>
+          <p>Vriendschapsverzoek van <%=item.name %></p>
+          <div class="">
+            <input type="radio" name="<%=item._id %>" value="bevestigen" id="bevestigen" onclick="return submitVerzoek(value, name)">
+            <label for="bevestigen">Bevestigen</label>
+            <input type="radio" name="<%=item._id %>" value="verwijderen" id="verwijderen" onclick="return submitVerzoek(value, name)">
+            <label for="verwijderen">Verwijderen</label>
+          </div>
+              <%})%>
+        </form>
+      </div>
       <section>
 
-      <p>Vriendschapsverzoek van: <%=invite.name%> </p>
       <h2>Vriendelijst</h2>
       <ul>
-        <% console.log(friends) %>
-        <% friends.forEach(function(item){  %>
-        <li><%=item.name%></li>
-        <%})%>
+          <% user.connections.forEach(item =>{%>
+            <li><%=item.name%></li>
+        <%}) %>
+
       </ul>
       </section>
       <section class="">
@@ -40,10 +54,6 @@
       </form>
       </section>
       <section>
-
-
-
-
       </section>
     </main>
   </body>

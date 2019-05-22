@@ -1,0 +1,33 @@
+<!-- views/pages/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <header>
+      <h1>Aanmelden</h1>
+    </header>
+    <main>
+    <section>
+    <form action="/signup" method="post" class="">
+      <label for="name">Wat is je naam?</label>
+      <input type="text" name="name" name>
+
+      <label for="email">E-mail</label>
+      <input type="text" name="email" required>
+
+      <label for="password">Wachtwoord</label>
+      <input type="password" name="password" required>
+
+      <button type="submit">Inloggen</button>
+    </form>
+    </section>
+    </main>
+  </body>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="index.js"></script>
+
+
+</html>

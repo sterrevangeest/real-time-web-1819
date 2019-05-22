@@ -10,15 +10,22 @@ $(".vrienduitnodigen").submit(function(e) {
   return false;
 });
 
-function submitForm(input) {
+function submitForm() {
   var form = document.querySelector(".vrienduitnodigen");
   var input = form.querySelector("input");
   console.log("vriend uitnodigen");
   var http = new XMLHttpRequest();
   var email = input.value;
-  console.log(email);
   http.open("POST", "/vrienduitnodigen/" + email, true);
   http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  console.log(http);
+  http.send();
+}
+
+function submitVerzoek(input, invite) {
+  console.log(input);
+  console.log(invite);
+  var http = new XMLHttpRequest();
+  http.open("POST", "/vriendantwoord/" + input + "," + invite, true);
+  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   http.send();
 }

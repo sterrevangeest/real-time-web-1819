@@ -1,3 +1,4 @@
+"use strict";
 console.log("test");
 
 var results = [
@@ -44,178 +45,138 @@ var results = [
   { stationName: "Aalten", stationId: "8400045" }
 ];
 
-require("dotenv").config();
-const port = process.env.PORT || 3000;
 const express = require("express");
-var session = require("express-session");
 const app = express();
-var bodyParser = require("body-parser");
-var mongo = require("mongodb");
-var request = require("request");
-const dotenv = require("dotenv");
+const port = process.env.PORT || 3000;
+const http = require("http").Server(app);
 
-var http = require("http").Server(app);
+const bodyParser = require("body-parser");
+
+const uniqid = require("uniqid");
+const request = require("request");
+const dotenv = require("dotenv");
+require("dotenv").config();
 
 let ejs = require("ejs");
 let io = require("socket.io")(http);
 
+const firebase = require("firebase/app");
+
+require("firebase/auth");
+require("firebase/firestore");
+require("firebase/database");
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBrW-sPy0YSHm-2Sw3oWusCXpLbRDuA308",
+  authDomain: "realtime-c903e.firebaseapp.com",
+  databaseURL: "https://realtime-c903e.firebaseio.com",
+  projectId: "realtime-c903e",
+  storageBucket: "realtime-c903e.appspot.com",
+  messagingSenderId: "916585688737",
+  appId: "1:916585688737:web:2e71eef1ee707b30"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const database = firebase.database();
+
 app.use(express.static("static"));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(
-  session({
-    resave: false,
-    saveUninitialized: true,
-    secret: process.env.SESSION_SECRET
-  })
-);
 
-var db = null;
-var url =
-  "mongodb+srv://sterrevangeest:J7_FBnFU-FcqTDh@real-time-web-ipuyv.mongodb.net/test?retryWrites=true";
+app.get("/", (req, res) => {
+  res.render("../views/pages/index.ejs");
+});
 
-mongo.MongoClient.connect(
-  url,
-  function(error, client) {
-    if (error) {
-      throw error;
+app.get("/signup", (req, res) => {
+  res.render("../views/pages/singup.ejs");
+});
+
+app.post("/signup", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const name = req.body.name;
+
+  firebase
+    .auth()
+    .createUserWithEmailAndPassword(email, password)
+    .catch(error => console.log(error));
+
+  firebase.auth().onAuthStateChanged(firebaseUser => {
+    if (firebaseUser) {
+      let userId = firebaseUser.uid;
+      firebase
+        .database()
+        .ref(userId)
+        .set({
+          userId: userId,
+          password: password,
+          name: name,
+          email: email,
+          connections: [
+            {
+              name: "Henk de Boer",
+              email: "henk123@hotmail.nl",
+              userId: "wzkv2PULDAM7oIRy4tJJf1XFlIa2"
+            }
+          ],
+          invitations: []
+        })
+        .then(user => {
+          console.log(user);
+          res.render("../views/pages/profile.ejs", {
+            user: user
+          });
+        });
     } else {
-      console.log("gelukt?");
+      console.log("not logged in");
     }
-    db = client.db("real-time-web");
-  }
-);
-//end
-
-app.get("/", (req, res) => res.render("../views/pages/index.ejs"));
+  });
+});
 
 app.post("/login", (req, res) => {
   console.log("PARAMS", req.params);
-  console.log("inloggen");
-  var email = req.body.email;
-  var password = req.body.password;
+  const email = req.body.email;
   console.log(email);
-  console.log("database", db);
+  const password = req.body.password;
+  console.log(password);
 
-  db.collection("profiles").findOne(
-    {
-      email: email
-    },
-    done
-  );
+  firebase
+    .auth()
+    .signInWithEmailAndPassword(email, password)
+    .catch(error => console.log(error));
 
-  function done(err, user) {
-    console.log(user);
-  }
+  firebase.auth().onAuthStateChanged(firebaseUser => {
+    if (firebaseUser) {
+      firebase
+        .database()
+        .ref()
+        .child(firebaseUser.uid)
+        .on("value", snapshot => {
+          console.log(snapshot.val());
+          res.render("../views/pages/profile.ejs", {
+            user: snapshot.val(),
+            data: results,
 
-  function done(err, user) {
-    console.log("ingelogde gebruiker", user);
-    // if (!req.session.user) {
-    //   console.log("nog geen session: dus maak aan");
-    //   req.session.user = { user };
-    //   console.log(req.session.user);
-    // } else {
-    //   console.log("er is wel een session");
-    //   console.log(req.session.user.user.inviteby);
-    // }
-
-    res.render("../views/pages/profile.ejs", {
-      user: user,
-      data: results,
-      friends: user.vrienden
-        ? user.vrienden
-        : [{ name: "Je hebt nog geen vrienden :(" }],
-      invite: user.inviteby
-        ? user.inviteby
-        : [{ name: "Je hebt geen uitnodigingen..." }]
-    });
-    //
-    // var options = {
-    //   url:
-    //     "https://gateway.apiportal.ns.nl/public-reisinformatie/api/v2/stations",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Ocp-Apim-Subscription-Key": "a25da04c7ab94cf1bf6a3663aa4fb712"
-    //   }
-    // };
-    //
-    // function callback(error, response, body) {
-    //   if (!error && response.statusCode == 200) {
-    //     var data = JSON.parse(body);
-    //     var data = data.payload;
-    //
-    //     var results = data.map(station => {
-    //       return {
-    //         stationName: station.namen.lang,
-    //         stationId: station.UICCode
-    //       };
-    //     });
-    //     console.log(results);
-    //
-    //     res.render("../views/pages/profile.ejs", {
-    //       user: req.session.user,
-    //       data: results
-    //     });
-    //   }
-    // }
-    // request(options, callback);
-  }
+            invite: []
+          });
+        });
+    } else {
+      console.log("not logged in");
+    }
+  });
 });
 
 app.post("/vrienduitnodigen/:email", (req, res) => {
-  // var email = req.body.email;
-
-  console.log("vriend uitnodigen");
-
-  db.collection("profiles").findOne(
-    {
-      email: req.params.email
-    },
-    done
-  );
-
-  function done(err, user) {
-    //console.log(req.session.user._id);
-
-    db.collection("profiles").updateOne(
-      user,
-      {
-        $set: {
-          inviteby: {
-            _id: req.session.user.user._id,
-            email: req.session.user.user.email,
-            name: req.session.user.user.name
-          }
-        }
-      },
-      oninsert
-    );
-
-    function oninsert(error, user) {
-      if (error) {
-        console.log(error);
-      } else {
-        //  console.log(user);
-        res.redirect(200, "/");
-      }
-    }
-  }
+  var inviteThisEmail = req.params.email;
+  console.log(inviteThisEmail);
+  firebase
+    .database()
+    .ref()
+    .child(inviteThisEmail)
+    .once("value")
+    .then(function(snapshot) {
+      console.log(snapshot.val());
+    });
 });
-// io.on("connection", socket => {
-//   var msgCount = [];
-//   socket.on("chat message", msg => {
-//     var msg = msg.split(" ").map(word => {
-//       msgCount++;
-//       return emoji.get(word) || word;
-//     });
-//     console.log(msgCount);
-//
-//     var msg = msg
-//       .toString()
-//       .replace(/,/g, " ")
-//       .replace(/:/g, "");
-//
-//     io.emit("chat message", msg, msgCount);
-//   });
-// });
 
 http.listen(port, () => console.log(`Example app listening on port ${port}!`));
