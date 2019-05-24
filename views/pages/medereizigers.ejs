@@ -1,0 +1,35 @@
+<!-- views/pages/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <header>
+      <h1>Medereizigers</h1>
+    </header>
+    <main>
+    <section>
+      <h3>Je vrienden in deze trein</h3>
+      <ul>
+      <%friendsInSameRoom.forEach(item =>{%>
+        <li><%= item.name %> <a href="/chat/123 %> ">stuur bericht</a> </li>
+      <%  })%>
+      </ul>
+
+      <!-- <ul>
+        <%usersInSameRoom.forEach(item =>{%>
+          <li><%= item %> <a href="#">stuur bericht</a> </li>
+        <%  })%>
+      </ul> -->
+    </section>
+    </main>
+  </body><script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script type="text/javascript">
+
+
+</script>
+
+  <!-- <script type="text/javascript" src="../index.js"></script> -->
+</html>

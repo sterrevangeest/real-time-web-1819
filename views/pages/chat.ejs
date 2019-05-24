@@ -1,0 +1,43 @@
+<!-- views/pages/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <header>
+      <h1>Chat </h1>
+    </header>
+    <main class="chat">
+    <section>
+      <ul id="messages"></ul>
+      <form class="messages" action="">
+        <input id="m" autocomplete="off" /><button>Verstuur</button>
+      </form>
+
+    </section>
+    </main>
+  </body><script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script type="text/javascript">
+    const room ="123";
+    const socket = io("/tech");
+
+  $("form").submit(() => {
+    let msg = $("#m").val();
+    socket.emit("message", { msg, room });
+    $("#m").val("");
+    return false;
+  });
+  socket.on("connect", () => {
+    // emiting to everybody
+    socket.emit("join", { room: room });
+  });
+  socket.on("message", msg => {
+    $("#messages").append($("<li>").text(msg));
+  });
+
+</script>
+
+  <!-- <script type="text/javascript" src="../index.js"></script> -->
+</html>

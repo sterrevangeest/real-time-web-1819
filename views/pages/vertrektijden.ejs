@@ -1,0 +1,38 @@
+<!-- views/pages/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <header>
+      <h1>Vertrektijden <%= data%></h1>
+    </header>
+    <main>
+
+    <section>
+      <% departures.forEach(item => { %>
+      <article>
+        <p><%=item.plannedDateTime%></p>
+        <div class="">
+          <h3><%=item.direction%></h3>
+          <p>Spoor <%=item.plannedTrack%> / <%=item.trainType%></p>
+
+        </div>
+        <a class="smallA" href="/reis/<%=item.tripId%>"<>></a>
+      </article>
+      <% }) %>
+    <form action="/signup" method="post" class="">
+      <%# <label for="name">Wat is je naam?</label>
+      <input type="text" name="name" name> %>
+
+    </form>
+    </section>
+    </main>
+  </body>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript" type="module" src="/index.js"></script>
+
+
+</html>
