@@ -1,0 +1,89 @@
+<!-- views/pages/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body>
+		<h1 class="h1">Koe&#8226;handel</h1>
+		<section class="form js-nickname-form">
+
+			<form class="js-create-user">
+				<legend class="label display-none" for="nickname">Wat is je naam?</legend>
+				<input class="input" id="nickname" name="nickname" autocomplete="off" placeholder="Wat is je naam?"/>
+				<button class="btn js-next">Start</button>
+			</form>
+
+			<section class="js-room-form display-none">
+				<button class="js-create-room btn">
+					Start a new game
+
+				</button>
+				<p>or</p>
+				<form class="js-join-room" action="#">
+					<input id="roomId" name="roomId" class="input"/>
+					<button class="btn" type="submit">Join a room</button>
+				</form>
+			</section>
+		</section>
+		<section class="js-game display-none">
+			<section>
+				<h2>Game info</h2>
+
+				<ul class="js-players">
+					Players:
+				</ul>
+
+				<p class="js-room-id">Deel room ID</p>
+			</section>
+
+
+			<section
+				class="js-game-form display-none">
+				<!-- <h2>Game</h2> -->
+
+				<p class="animal-card-paragraph js-points"></p>
+				<img class="animal-card js-dogSrc" src="" alt=""/>
+
+
+				<form class="bet-form js-bet-form" action="">
+					<input type="radio" class="js-bid-button display-none" value="10" name="bid" id="bet_10"/>
+					<label for="bet_10" class="bet-form__label">10 euro</label>
+
+					<input type="radio" class="js-bid-button display-none" value="25" name="bid" id="bet_25"/>
+					<label for="bet_25" class="bet-form__label">25 euro</label>
+
+					<input type="radio" class="js-bid-button display-none" value="50" name="bid" id="bet_50"/>
+					<label for="bet_50" class="bet-form__label">50 euro</label>
+
+					<input type="radio" class="js-bid-button display-none" value="75" name="bid" id="bet_75"/>
+					<label for="bet_75" class="bet-form__label">75 euro</label>
+					<button type="submit" class="js-bet-form-submit">Submit</button>
+				</form>
+			</section>
+		</section>
+
+		<section
+			class="js-game-form display-none">
+			<!-- <h2>Game</h2> -->
+
+			<p class="animal-card-paragraph js-points">58</p>
+			<img class="animal-card js-dogSrc" src="https://images.dog.ceo/breeds/terrier-russell/little1.jpg" alt="">
+
+			<form class="bet-form js-bet-form" action="">
+				<input type="radio" class="js-bid-button display-none" value="10" name="bid" id="bet_10">
+				<label for="bet_10" class="bet-form__label">10 euro</label>
+
+				<input type="radio" class="js-bid-button display-none" value="25" name="bid" id="bet_25">
+				<label for="bet_25" class="bet-form__label">25 euro</label>
+
+				<input type="radio" class="js-bid-button display-none" value="50" name="bid" id="bet_50">
+				<label for="bet_50" class="bet-form__label">50 euro</label>
+
+				<input type="radio" class="js-bid-button display-none" value="75" name="bid" id="bet_75">
+				<label for="bet_75" class="bet-form__label">75 euro</label>
+				<button type="submit" class="js-bet-form-submit">Submit</button>
+			</form>
+		</section>
+	</body>
+</html></section></body><script src="https://code.jquery.com/jquery-1.11.1.js"></script><script src="/socket.io/socket.io.js"></script><script src="index.js"></script></html>

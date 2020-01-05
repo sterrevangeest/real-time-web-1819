@@ -1,20 +1,18 @@
 <!-- views/pages/index.ejs -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <% include ../partials/head %>
-  </head>
-  <body>
-    <h1></h1>
-    <ul id="messages">
-      <!-- <li> <img src="dancingbanana.gif" width="100px" onkeypress=""alt=""></li> -->
-    </ul>
-   <form action="">
-     <input id="m" autocomplete="off" /><button>Send</button>
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body>
+		<h1 class="h1">Koe&#8226;handel</h1>
+		<form action="/login" action="POST" class="js-start-form">
+			<legend class="label display-none" for="username">Wat is je naam?</legend>
+			<input class="input" id="username" name="username" autocomplete="off" placeholder="Wat is je naam?" value/>
+			<button class="js-create-room btn" type="submit">Volgende</button>
 
-   </form>
-  </body>
-  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="index.js"></script>
+		</form>
+	</body>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="index.js"></script>
 </html>

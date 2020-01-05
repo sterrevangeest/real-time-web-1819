@@ -1,50 +1,89 @@
-console.log("!");
-var socket = io();
+var socket = io("");
 
-(function() {
-  var socket = io();
+socket.on("sessiondata", function(data) {
+  console.info("sessiondata event received. Check the console");
+  console.info("sessiondata is ", data);
+});
 
-  document.querySelector("form").addEventListener("submit", function(e) {
-    e.preventDefault();
-    socket.emit("chat message", document.querySelector("#m").value);
-    document.querySelector("#m").value = "";
-    return false;
-  });
+socket.on("logged_in", function(data) {
+  console.info("logged_in event received. Check the console");
+  console.info("sessiondata after logged_in event is ", data);
+  socket.emit("joinRoom", data);
+});
+socket.on("logged_out", function(data) {
+  console.info("logged_out event received. Check the console");
+  console.info("sessiondata after logged_out event is ", data);
+});
+socket.on("checksession", function(data) {
+  console.info("checksession event received. Check the console");
+  console.info("sessiondata after checksession event is ", data);
+});
 
-  socket.on("chat message", function(msg, msgCount) {
-    var newLi = document.createElement("li");
-    var liSpan = document.createElement("span");
-    var count = document.createElement("p");
+socket.on("roomId", function(data) {
+  console.info("Joined roomId ", data);
+  socket.emit("checkPlayersInRoom", data);
+});
 
-    var timeStamp = createTimeStamp();
-    var findEmoji = findEmoji(msg);
+socket.on("players", function(players) {
+  console.log(players);
+});
 
-    newLi.textContent = msg;
+const form = document.querySelector(".js-room-form");
+if (form) {
+  form.addEventListener("submit", sendRoom, false);
 
-    function createTimeStamp() {
-      var today = new Date();
-      var time =
-        today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-      return (liSpan.textContent = time);
+  function sendRoom(event) {
+    event.preventDefault();
+    let room = document.querySelector("#roomId");
+    console.log(room);
+    if (!room.value) {
+      let roomId = (Math.random() + 1).toString(36).slice(2, 6);
+      room.value = roomId;
     }
-    function findEmoji(msg, timeStamp) {
-      var regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|[\ud83c[\ude01\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|[\ud83c[\ude32\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|[\ud83c[\ude50\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g;
-      var findEmoji = msg.match(regex);
+    form.submit();
+  }
+}
 
-      if (findEmoji) {
-        if (findEmoji.length === 1) {
-          document.querySelector("#messages").append(newLi);
-          if (msg.length < 5) {
-            newLi.classList.add("bigSmiley");
-          }
-        } else {
-          console.log("meerdere smiley");
-          document.querySelector("#messages").append(newLi);
-        }
-      } else if (!findEmoji) {
-        document.querySelector("#messages").append(newLi);
-      }
-    }
-    newLi.append(liSpan);
-  });
-})();
+// createRoom.addEventListener("click", createNewRoom, false);
+// joinGame.addEventListener("click", joinRoom, false);
+
+// function createNewRoom() {
+//   event.preventDefault();
+//   const room = (Math.random() + 1).toString(36).slice(2, 6);
+//   formData.append("roomId", room);
+//   form.submit();
+// }
+
+// function joinRoom(event) {
+//   event.preventDefault();
+//   form.submit();
+// }
+
+// document
+//   .getElementById("loginviasocket")
+//   .addEventListener("click", function(e) {
+//     socket.emit("login");
+//     e.preventDefault();
+//   });
+// document
+//   .getElementById("logoutviasocket")
+//   .addEventListener("click", function(e) {
+//     socket.emit("logout");
+//     e.preventDefault();
+//   });
+// document
+//   .getElementById("checksessionviasocket")
+//   .addEventListener("click", function(e) {
+//     socket.emit("checksession");
+//     e.preventDefault();
+//   });
+
+// const nicknameForm = document.querySelector(".js-create-user");
+// if (nicknameForm) {
+//   nicknameForm.addEventListener("submit", getUser, false);
+// }
+
+// const bidFormSubmit = document.querySelector(".js-bet-form-submit");
+// if (bidFormSubmit) {
+//   bidFormSubmit.addEventListener("click", getBid, false);
+// }

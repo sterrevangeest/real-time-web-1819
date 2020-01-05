@@ -1,0 +1,50 @@
+<!-- views/pages/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body>
+		<button id="checksessionviasocket">check session</button>
+		<section class="js-game">
+			<section>
+				<p>Room id:
+					<%=roomId %>
+				</p>
+				<p>Current user:<%=username %>
+				</p>
+				<ul class="js-players">
+					Players:
+				</ul>
+
+				<p class="js-room-id"></p>
+			</section>
+
+			<section
+				class="js-game-form ">
+				<!-- <h2>Game</h2> -->
+
+				<p class="animal-card-paragraph js-points">58</p>
+				<img class="animal-card js-dogSrc" src="https://images.dog.ceo/breeds/terrier-russell/little1.jpg" alt="">
+
+				<form class="bet-form js-bet-form" action="">
+					<input type="radio" class="js-bid-button display-none" value="10" name="bid" id="bet_10">
+					<label for="bet_10" class="bet-form__label">10 euro</label>
+
+					<input type="radio" class="js-bid-button display-none" value="25" name="bid" id="bet_25">
+					<label for="bet_25" class="bet-form__label">25 euro</label>
+
+					<input type="radio" class="js-bid-button display-none" value="50" name="bid" id="bet_50">
+					<label for="bet_50" class="bet-form__label">50 euro</label>
+
+					<input type="radio" class="js-bid-button display-none" value="75" name="bid" id="bet_75">
+					<label for="bet_75" class="bet-form__label">75 euro</label>
+					<button type="submit" class="js-bet-form-submit">Submit</button>
+				</form>
+			</section>
+		</body>
+
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="index.js"></script>
+	</body>
+</html>
