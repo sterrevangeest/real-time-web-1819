@@ -143,40 +143,40 @@ const currentDog = [];
 //     io.sockets.in(room).emit("dog", card);
 //   }
 
-//   socket.on("bid", function(bid) {
-//     console.log(bid);
-//     const user = players.find(player => player.id === socket.id);
-//     user.bid.value = bid;
-//     const allAnswers = players.every(player => player.bid.value != 0);
-//     const answers = players.map(player => player.bid.value);
-//     const tie = Object.is(answers[0], answers[1]);
+// socket.on("bid", function(bid) {
+//   console.log(bid);
+//   const user = players.find(player => player.id === socket.id);
+//   user.bid.value = bid;
+//   const allAnswers = players.every(player => player.bid.value != 0);
+//   const answers = players.map(player => player.bid.value);
+//   const tie = Object.is(answers[0], answers[1]);
 
-//     if (allAnswers) {
-//       if (tie) {
-//         console.log("gelijk gespeeld");
-//       } else {
-//         const winner = players.reduce((max, game) =>
-//           max.bid.value > game.bid.value ? max : game
-//         );
-//         const loser = players.reduce((max, game) =>
-//           max.bid.value < game.bid.value ? max : game
-//         );
-
-//         const currentCard = game[game.length - 1];
-//         console.log(currentCard);
-
-//         winner.game += currentCard.points;
-//         console.log("WINNER", winner);
-//         console.log("LOSER", loser);
-//         socket.broadcast.to(loser.id).emit("message", "VERLOREN");
-//         socket.broadcast.to(winner.id).emit("message", "GEWONNEN");
-//         players.map(player => (player.bid.value = 0));
-//         getDog(user.room);
-//       }
+//   if (allAnswers) {
+//     if (tie) {
+//       console.log("gelijk gespeeld");
 //     } else {
-//       console.log("nog niet allebei gereageerd");
+//       const winner = players.reduce((max, game) =>
+//         max.bid.value > game.bid.value ? max : game
+//       );
+//       const loser = players.reduce((max, game) =>
+//         max.bid.value < game.bid.value ? max : game
+//       );
+
+//       const currentCard = game[game.length - 1];
+//       console.log(currentCard);
+
+//       winner.game += currentCard.points;
+//       console.log("WINNER", winner);
+//       console.log("LOSER", loser);
+//       socket.broadcast.to(loser.id).emit("message", "VERLOREN");
+//       socket.broadcast.to(winner.id).emit("message", "GEWONNEN");
+//       players.map(player => (player.bid.value = 0));
+//       getDog(user.room);
 //     }
-//   });
+//   } else {
+//     console.log("nog niet allebei gereageerd");
+//   }
+// });
 // });
 
 // function getPoints() {
