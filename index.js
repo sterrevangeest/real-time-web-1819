@@ -20,6 +20,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const players = [];
 const cards = [];
 const step = [];
+let currentStep = "";
+let fellowPlayers = "";
 
 // Attach session
 app.use(session);
@@ -34,66 +36,82 @@ const game = require("./game.js");
 const routes = require("./routes.js").routes(app);
 
 io.on("connection", socket => {
+  // create session
   socket.emit("sessiondata", socket.handshake.session);
+
   const user = socket.handshake.session.user;
   user.id = socket.id;
   user.bid = 0;
+  user.game = 0;
   players.push(user);
+
   if (user) {
     if ("roomId" in user) {
       const roomId = user["roomId"];
       socket.join(roomId);
-      // io.sockets.in(user.roomId).emit("roomId", user);
-      io.of("/")
-        .in(roomId)
-        .clients((error, clients) => {
-          io.sockets.in(roomId).emit("players", players);
-        });
+      fellowPlayers = players.filter(player => player.roomId === roomId);
+      console.log("fellowPlayers", fellowPlayers);
+      io.sockets.in(roomId).emit("players", fellowPlayers);
+
       if (players.length > 1) {
-        // start game
         startGame(roomId);
       }
     }
   }
 
-  socket.on("bid", function(bid) {
-    const currentUser = players.find(
-      player => player.username === user.username
-    );
-    currentUser.bid = bid;
-    const allAnswers = players.every(player => player.bid != 0);
-    console.log(allAnswers);
+  socket.on("bid", bid => {
+    // save bid in user object
+    user.bid = bid;
+    console.log("fellowPlayers2", fellowPlayers);
+    // show bid of opponent to client
+    const allAnswers = fellowPlayers.every(player => player.bid != 0);
     if (allAnswers) {
-      const result = game.getResult(players, cards);
-      console.log("Result", result);
-      players.map(player => (player.bid = 0));
-      startGame(user.roomId);
-      io.of("/")
-        .in(user.roomId)
-        .clients((error, clients) => {
-          io.sockets.in(user.roomId).emit("message", result);
-        });
+      fellowPlayers.map(player => {
+        if (player.username != user.username) {
+          const opponentBid = player.bid;
+          io.sockets.in(user.id).emit("opponentBid", opponentBid);
+          io.sockets.in(player.id).emit("opponentBid", user.bid);
+        }
+      });
+
+      // get results and send them to client
+      const result = game.getResult(fellowPlayers, cards);
+      io.sockets.in(user.roomId).emit("message", result);
+
+      // reset
+      fellowPlayers.map(player => (player.bid = 0));
+
+      // show next card
+      setTimeout(function() {
+        startGame(user.roomId);
+      }, 5000);
     }
-    // socket.broadcast.to(loser.id).emit("message", "verloren");
-    // socket.broadcast.to(winner.id).emit("message", "gewonnen");
   });
 
   function startGame(roomId) {
     game.getCard().then(card => {
       cards.push(card);
       io.sockets.in(roomId).emit("sendCard", card);
-      step.push("card");
-      console.log(step);
-      if (step.length > 4) {
-        console.log("laat eindresultaat zien");
+      console.log(fellowPlayers);
+      fellowPlayers.push({ step: [1] });
+      if (step.length > 2) {
+        const winner = game.getEndResult(players);
+        const loser = fellowPlayers.find(player => player.id != winner.id);
+
+        io.sockets.in(winner.id).emit("endResult", "Wohoo! Je hebt gewonnen!");
+        io.sockets
+          .in(loser.id)
+          .emit("endResult", "Helaas, je hebt verloren...");
       }
     });
   }
 
   // Unset session data via socket
-  socket.on("logout", () => {
+  socket.on("disconnect", () => {
     delete socket.handshake.session.user;
+    // delete uit players
     socket.emit("logged_out", socket.handshake.session);
+    console.log("disconnect");
   });
 });
 

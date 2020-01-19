@@ -1,4 +1,6 @@
 const form = document.querySelector(".js-room-form");
+const pointsEl = document.querySelector(".js-points");
+
 if (form) {
   console.log(form);
   form.addEventListener("submit", sendRoom, false);
@@ -8,7 +10,7 @@ if (form) {
     let room = document.querySelector("#roomId");
     console.log(room.value);
     if (!room.value) {
-      let roomId = (Math.random() + 1).toString(36).slice(2, 6);
+      let roomId = Math.floor(1000 + Math.random() * 9000);
       console.log(roomId);
       room.value = roomId;
     }
@@ -41,15 +43,30 @@ socket.on("roomId", function(data) {
 });
 
 socket.on("players", function(players) {
-  console.log("alle spelers in deze room", players);
+  const opponentEl = document.querySelectorAll(".js-opponent");
+  const opponentPointsEl = document.querySelector(".js-opponent-points");
+  const game = document.querySelector(".js-game-form");
+  const opponent = players.filter(player => player.id != socket.id);
+  if (opponent.length != 0) {
+    console.log(opponent[0].username);
+    opponentEl.forEach(element => {
+      element.innerHTML = opponent[0].username;
+    });
+    opponentPointsEl.innerHTML = "0";
+    game.classList.remove("display-none");
+  }
 });
 
 socket.on("sendCard", function(dog) {
   console.log("nieuwe card");
+  const overlayEl = document.querySelector(".js-overlay");
+  overlayEl.classList.add("display-none");
   const dogSrc = document.querySelector(".js-dogSrc");
   const points = document.querySelector(".js-points");
   points.innerHTML = dog.points;
   dogSrc.src = dog.image;
+  const opponentBidEl = document.querySelector(".js-opponent-bid");
+  opponentBidEl.innerHTML = "...";
 });
 
 const bidFormSubmit = document.querySelector(".js-bet-form-submit");
@@ -66,56 +83,37 @@ function getBid(event) {
     );
     const value = parseInt(checkedInput.value);
     checkedInput.disabled = true;
-    console.log(value);
     socket.emit("bid", value);
+    const pointsEl = document.querySelector(".js-bid");
+    pointsEl.innerHTML = value;
   }
+
+  const overlayEl = document.querySelector(".js-overlay");
+  overlayEl.classList.remove("display-none");
   getCheckedInput(checkboxName);
 }
 
-socket.on("message", function(message) {
-  console.log(message);
+socket.on("message", function(result) {
+  const id = socket.io.engine.id;
+  const currentUser = result.filter(user => user.id == socket.io.engine.id);
+  const opponentUser = result.filter(user => user.id != socket.io.engine.id);
+  console.log(currentUser, opponentUser);
+  const opponentPointsEl = document.querySelector(".js-opponent-points");
+  const pointsEl = document.querySelector(".js-current-user-points");
+  opponentPointsEl.innerHTML = opponentUser[0].game;
+  pointsEl.innerHTML = currentUser[0].game;
 });
 
-// createRoom.addEventListener("click", createNewRoom, false);
-// joinGame.addEventListener("click", joinRoom, false);
+socket.on("opponentBid", function(opponentBid) {
+  console.log(opponentBid);
+  const opponentBidEl = document.querySelector(".js-opponent-bid");
+  opponentBidEl.innerHTML = opponentBid;
+});
 
-// function createNewRoom() {
-//   event.preventDefault();
-//   const room = (Math.random() + 1).toString(36).slice(2, 6);
-//   formData.append("roomId", room);
-//   form.submit();
-// }
-
-// function joinRoom(event) {
-//   event.preventDefault();
-//   form.submit();
-// }
-
-// document
-//   .getElementById("loginviasocket")
-//   .addEventListener("click", function(e) {
-//     socket.emit("login");
-//     e.preventDefault();
-//   });
-// document
-//   .getElementById("logoutviasocket")
-//   .addEventListener("click", function(e) {
-//     socket.emit("logout");
-//     e.preventDefault();
-//   });
-// document
-//   .getElementById("checksessionviasocket")
-//   .addEventListener("click", function(e) {
-//     socket.emit("checksession");
-//     e.preventDefault();
-//   });
-
-// const nicknameForm = document.querySelector(".js-create-user");
-// if (nicknameForm) {
-//   nicknameForm.addEventListener("submit", getUser, false);
-// }
-
-// const bidFormSubmit = document.querySelector(".js-bet-form-submit");
-// if (bidFormSubmit) {
-//   bidFormSubmit.addEventListener("click", getBid, false);
-// }
+socket.on("endResult", function(message) {
+  console.log(message);
+  const form = document.querySelector(".js-game-form");
+  form.classList.add("display-none");
+  const resultEl = document.querySelector(".js-end-result");
+  resultEl.innerHTML = message;
+});
