@@ -20,13 +20,10 @@ exports.getResult = (players, cards) => {
   if (tie) {
     return players;
   } else {
-    console.log(players);
     const winner = players.reduce((max, game) =>
       max.bid > game.bid ? max : game
     );
-
     winner.game += points;
-    console.log(players);
     return players;
   }
 };

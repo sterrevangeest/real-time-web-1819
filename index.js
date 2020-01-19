@@ -17,11 +17,9 @@ app.set("view engine", "ejs");
 app.use(express.static("static"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const players = [];
+const allPlayers = [];
+const allRooms = [];
 const cards = [];
-const step = [];
-let currentStep = "";
-let fellowPlayers = "";
 
 // Attach session
 app.use(session);
@@ -32,29 +30,32 @@ io.use(
     autoSave: true
   })
 );
+
 const game = require("./game.js");
 const routes = require("./routes.js").routes(app);
 
 io.on("connection", socket => {
-  // create session
   socket.emit("sessiondata", socket.handshake.session);
 
   const user = socket.handshake.session.user;
   user.id = socket.id;
   user.bid = 0;
   user.game = 0;
-  players.push(user);
+  allPlayers.push(user);
 
   if (user) {
     if ("roomId" in user) {
       const roomId = user["roomId"];
       socket.join(roomId);
-      fellowPlayers = players.filter(player => player.roomId === roomId);
-      console.log("fellowPlayers", fellowPlayers);
+      let fellowPlayers = allPlayers.filter(player => player.roomId === roomId);
       io.sockets.in(roomId).emit("players", fellowPlayers);
 
-      if (players.length > 1) {
+      if (fellowPlayers.length > 1) {
         startGame(roomId);
+        var key = roomId;
+        var obj = {};
+        obj[key] = fellowPlayers;
+        allRooms.push(obj);
       }
     }
   }
@@ -62,8 +63,9 @@ io.on("connection", socket => {
   socket.on("bid", bid => {
     // save bid in user object
     user.bid = bid;
-    console.log("fellowPlayers2", fellowPlayers);
+
     // show bid of opponent to client
+    let fellowPlayers = getFellowPlayers();
     const allAnswers = fellowPlayers.every(player => player.bid != 0);
     if (allAnswers) {
       fellowPlayers.map(player => {
@@ -88,31 +90,53 @@ io.on("connection", socket => {
     }
   });
 
+  socket.on("endOfGame", () => {
+    let fellowPlayers = getFellowPlayers();
+
+    const winner = game.getEndResult(fellowPlayers);
+    const loser = fellowPlayers.find(player => player.id != winner.id);
+
+    io.sockets.in(winner.id).emit("endResult", "Wohoo! Je hebt gewonnen!");
+    io.sockets.in(loser.id).emit("endResult", "Helaas, je hebt verloren...");
+  });
+
+  socket.on("redirect", () => {
+    resetData();
+  });
+
+  // Unset session data via socket
+  socket.on("disconnect", () => {
+    resetData();
+  });
+
+  function resetData() {
+    // delete room
+    for (rooms in allRooms) {
+      delete allRooms[rooms][user.roomId];
+    }
+
+    // reset socket user
+    delete socket.handshake.session.user;
+  }
+
   function startGame(roomId) {
     game.getCard().then(card => {
       cards.push(card);
       io.sockets.in(roomId).emit("sendCard", card);
-      console.log(fellowPlayers);
-      fellowPlayers.push({ step: [1] });
-      if (step.length > 2) {
-        const winner = game.getEndResult(players);
-        const loser = fellowPlayers.find(player => player.id != winner.id);
-
-        io.sockets.in(winner.id).emit("endResult", "Wohoo! Je hebt gewonnen!");
-        io.sockets
-          .in(loser.id)
-          .emit("endResult", "Helaas, je hebt verloren...");
-      }
     });
   }
 
-  // Unset session data via socket
-  socket.on("disconnect", () => {
-    delete socket.handshake.session.user;
-    // delete uit players
-    socket.emit("logged_out", socket.handshake.session);
-    console.log("disconnect");
-  });
+  function getFellowPlayers() {
+    for (rooms in allRooms) {
+      console.log(allRooms);
+      console.log(rooms);
+      console.log(user.roomId);
+      console.log(allRooms[rooms][user.roomId]);
+      if (allRooms[rooms][user.roomId]) {
+        return allRooms[rooms][user.roomId];
+      }
+    }
+  }
 });
 
 http.listen(port, () => console.log(`Example app listening on port ${port}!`));

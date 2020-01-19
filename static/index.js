@@ -1,6 +1,8 @@
 const form = document.querySelector(".js-room-form");
 const pointsEl = document.querySelector(".js-points");
 
+let myFuncCalls = 0;
+
 if (form) {
   console.log(form);
   form.addEventListener("submit", sendRoom, false);
@@ -77,7 +79,9 @@ if (bidFormSubmit) {
 function getBid(event) {
   event.preventDefault();
   const checkboxName = "bid";
+
   function getCheckedInput(checkboxName) {
+    myFuncCalls++;
     const checkedInput = document.querySelector(
       'input[name="' + checkboxName + '"]:checked'
     );
@@ -102,6 +106,11 @@ socket.on("message", function(result) {
   const pointsEl = document.querySelector(".js-current-user-points");
   opponentPointsEl.innerHTML = opponentUser[0].game;
   pointsEl.innerHTML = currentUser[0].game;
+  console.log(myFuncCalls);
+  if (myFuncCalls > 0) {
+    console.log(myFuncCalls);
+    socket.emit("endOfGame");
+  }
 });
 
 socket.on("opponentBid", function(opponentBid) {
@@ -111,9 +120,12 @@ socket.on("opponentBid", function(opponentBid) {
 });
 
 socket.on("endResult", function(message) {
-  console.log(message);
   const form = document.querySelector(".js-game-form");
   form.classList.add("display-none");
   const resultEl = document.querySelector(".js-end-result");
   resultEl.innerHTML = message;
+  setTimeout(function() {
+    window.location.href = "/";
+    socket.emit("redirect");
+  }, 5000);
 });
