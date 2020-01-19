@@ -22,28 +22,6 @@ if (form) {
 
 var socket = io("");
 
-socket.on("sessiondata", function(data) {
-  console.info("sessiondata event received. Check the console");
-  console.info("sessiondata is ", data);
-});
-
-socket.on("logged_in", function(data) {
-  console.info("logged_in event received. Check the console");
-  console.info("sessiondata after logged_in event is ", data);
-});
-socket.on("logged_out", function(data) {
-  console.info("logged_out event received. Check the console");
-  console.info("sessiondata after logged_out event is ", data);
-});
-socket.on("checksession", function(data) {
-  console.info("checksession event received. Check the console");
-  console.info("sessiondata after checksession event is ", data);
-});
-
-socket.on("roomId", function(data) {
-  console.info("Joined roomId ", data);
-});
-
 socket.on("players", function(players) {
   const opponentEl = document.querySelectorAll(".js-opponent");
   const opponentPointsEl = document.querySelector(".js-opponent-points");

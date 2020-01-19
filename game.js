@@ -41,6 +41,14 @@ exports.getEndResult = players => {
   }
 };
 
+exports.getFellowPlayers = (user, allRooms) => {
+  for (rooms in allRooms) {
+    if (allRooms[rooms][user.roomId]) {
+      return allRooms[rooms][user.roomId];
+    }
+  }
+};
+
 function getPoints() {
   const min = 10;
   const max = 100;

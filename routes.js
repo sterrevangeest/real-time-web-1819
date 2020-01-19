@@ -1,7 +1,7 @@
 // ROUTES
 
 exports.routes = app => {
-  app.use("/", (req, res) => {
+  app.get("/", (req, res) => {
     res.render("../views/pages/index.ejs");
   });
 

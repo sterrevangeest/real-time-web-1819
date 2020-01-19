@@ -35,8 +35,7 @@ const game = require("./game.js");
 const routes = require("./routes.js").routes(app);
 
 io.on("connection", socket => {
-  socket.emit("sessiondata", socket.handshake.session);
-
+  // create user
   const user = socket.handshake.session.user;
   user.id = socket.id;
   user.bid = 0;
@@ -47,6 +46,7 @@ io.on("connection", socket => {
     if ("roomId" in user) {
       const roomId = user["roomId"];
       socket.join(roomId);
+
       let fellowPlayers = allPlayers.filter(player => player.roomId === roomId);
       io.sockets.in(roomId).emit("players", fellowPlayers);
 
@@ -65,7 +65,7 @@ io.on("connection", socket => {
     user.bid = bid;
 
     // show bid of opponent to client
-    let fellowPlayers = getFellowPlayers();
+    let fellowPlayers = game.getFellowPlayers(user, allRooms);
     const allAnswers = fellowPlayers.every(player => player.bid != 0);
     if (allAnswers) {
       fellowPlayers.map(player => {
@@ -91,13 +91,17 @@ io.on("connection", socket => {
   });
 
   socket.on("endOfGame", () => {
-    let fellowPlayers = getFellowPlayers();
+    let fellowPlayers = game.getFellowPlayers(user, allRooms);
 
     const winner = game.getEndResult(fellowPlayers);
-    const loser = fellowPlayers.find(player => player.id != winner.id);
 
-    io.sockets.in(winner.id).emit("endResult", "Wohoo! Je hebt gewonnen!");
-    io.sockets.in(loser.id).emit("endResult", "Helaas, je hebt verloren...");
+    if (winner.length > 1) {
+      io.sockets.in(user.id).emit("endResult", "Gelijkspel...");
+    } else {
+      const loser = fellowPlayers.find(player => player.id != winner.id);
+      io.sockets.in(winner.id).emit("endResult", "Wohoo! Je hebt gewonnen!");
+      io.sockets.in(loser.id).emit("endResult", "Helaas, je hebt verloren...");
+    }
   });
 
   socket.on("redirect", () => {
@@ -124,18 +128,6 @@ io.on("connection", socket => {
       cards.push(card);
       io.sockets.in(roomId).emit("sendCard", card);
     });
-  }
-
-  function getFellowPlayers() {
-    for (rooms in allRooms) {
-      console.log(allRooms);
-      console.log(rooms);
-      console.log(user.roomId);
-      console.log(allRooms[rooms][user.roomId]);
-      if (allRooms[rooms][user.roomId]) {
-        return allRooms[rooms][user.roomId];
-      }
-    }
   }
 });
 
