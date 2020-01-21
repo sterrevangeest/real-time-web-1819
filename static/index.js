@@ -4,16 +4,13 @@ const pointsEl = document.querySelector(".js-points");
 let myFuncCalls = 0;
 
 if (form) {
-	console.log(form);
 	form.addEventListener("submit", sendRoom, false);
 
 	function sendRoom(event) {
 		event.preventDefault();
 		let room = document.querySelector("#roomId");
-		console.log(room.value);
 		if (!room.value) {
 			let roomId = Math.floor(1000 + Math.random() * 9000);
-			console.log(roomId);
 			room.value = roomId;
 		}
 		form.submit();
@@ -28,7 +25,6 @@ socket.on("players", function(players) {
 	const game = document.querySelector(".js-game-form");
 	const opponent = players.filter(player => player.id != socket.id);
 	if (opponent.length != 0) {
-		console.log(opponent[0].username);
 		opponentEl.forEach(element => {
 			element.innerHTML = opponent[0].username;
 		});
@@ -78,20 +74,16 @@ socket.on("message", function(result) {
 	const id = socket.io.engine.id;
 	const currentUser = result.filter(user => user.id == socket.io.engine.id);
 	const opponentUser = result.filter(user => user.id != socket.io.engine.id);
-	console.log(currentUser, opponentUser);
 	const opponentPointsEl = document.querySelector(".js-opponent-points");
 	const pointsEl = document.querySelector(".js-current-user-points");
 	opponentPointsEl.innerHTML = opponentUser[0].game;
 	pointsEl.innerHTML = currentUser[0].game;
-	console.log(myFuncCalls);
-	if (myFuncCalls > 0) {
-		console.log(myFuncCalls);
+	if (myFuncCalls > 3) {
 		socket.emit("endOfGame");
 	}
 });
 
 socket.on("opponentBid", function(opponentBid) {
-	console.log(opponentBid);
 	const opponentBidEl = document.querySelector(".js-opponent-bid");
 	opponentBidEl.innerHTML = opponentBid;
 });
