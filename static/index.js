@@ -38,7 +38,6 @@ socket.on("players", function(players) {
 });
 
 socket.on("sendCard", function(dog) {
-	console.log("nieuwe card");
 	const overlayEl = document.querySelector(".js-overlay");
 	overlayEl.classList.add("display-none");
 	const dogSrc = document.querySelector(".js-dogSrc");

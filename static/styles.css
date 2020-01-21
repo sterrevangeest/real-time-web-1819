@@ -1,173 +1,183 @@
 :root {
-  --light: #efeae4;
-  --dark: #3b3541;
-  --blue: #6f7281;
-  --light-blue: #dedbd7;
-  --red: #c2574c;
-  --dark-red: #7b3730;
+	--light: #efeae4;
+	--dark: #3b3541;
+	--blue: #6f7281;
+	--light-blue: #dedbd7;
+	--red: #c2574c;
+	--dark-red: #7b3730;
 }
 
 body {
-  font-family: Ubuntu;
-  max-width: 40em;
-  margin: 2em auto;
-  background-color: var(--light);
-  color: var(--dark);
-  height: 100vh;
+	font-family: Ubuntu;
+	max-width: 40em;
+	margin: 2em auto;
+	background-color: var(--light);
+	color: var(--dark);
+	height: 100vh;
 }
 
 .h1 {
-  font-family: "Bowlby One SC", cursive;
-  font-size: 50px;
-  text-align: center;
-  margin: 0;
+	font-family: "Bowlby One SC", cursive;
+	font-size: 50px;
+	text-align: center;
+	margin: 0;
 }
 
 .display-none {
-  display: none;
+	display: none;
 }
 
 .btn {
-  background-color: var(--red);
-  display: inline;
-  padding: 0.5em 1em;
-  max-width: max-content;
-  font-family: inherit;
-  font-size: inherit;
-  color: var(--light);
-  border: 0;
-  border-radius: 0.1em;
-  transition: transform 0.3s;
-  opacity: 0.4;
+	background-color: var(--red);
+	display: inline;
+	padding: 0.5em 1em;
+	max-width: max-content;
+	font-family: inherit;
+	font-size: inherit;
+	color: var(--light);
+	border: 0;
+	border-radius: 0.1em;
+	transition: transform 0.3s;
+}
+
+.btn-opacity {
+	opacity: 0.4;
 }
 .btn:hover {
-  background-color: var(--dark-red);
-  transform: translateY(-2px);
+	background-color: var(--dark-red);
+	transform: translateY(-2px);
+}
+
+.text-center {
+	text-align: center;
+}
+
+input {
+	font-family: inherit;
+	font-size: 1rem;
+	padding: 0.5em 1em;
 }
 
 input:checked + .bet-form__label,
 input:hover + .bet-form__label {
-  border-radius: 0.1em;
-  background-color: var(--dark);
-  color: white;
+	border-radius: 0.1em;
+	background-color: var(--dark);
+	color: white;
 }
 
 input:disabled + .bet-form__label {
-  opacity: 0.2;
+	opacity: 0.2;
 }
 
 input:checked ~ .btn {
-  opacity: 1;
+	opacity: 1;
 }
 
 .bet-form {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
 }
 
 button,
 input {
-  font-family: inherit;
-}
-
-label {
+	font-family: inherit;
 }
 
 .w-100 {
-  width: 100%;
+	width: 100%;
 }
 
 .game {
-  margin-bottom: 10em;
+	margin-bottom: 10em;
 }
 .game__pin {
-  /* background-color: var(--dark); */
-  padding: 0.5em;
-  /* color: var(--light); */
-  font-family: "Bowlby One SC", cursive;
-  letter-spacing: 2px;
+	/* background-color: var(--dark); */
+	padding: 0.5em;
+	/* color: var(--light); */
+	font-family: "Bowlby One SC", cursive;
+	letter-spacing: 2px;
 }
 .game__players {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
 }
 
 .game__player {
-  width: 100%;
-  margin-bottom: 2em;
-  list-style-type: none;
-  background-color: var(--light-blue);
-  padding: 1em;
-  display: flex;
-  justify-content: space-between;
+	width: 100%;
+	margin-bottom: 2em;
+	list-style-type: none;
+	background-color: var(--light-blue);
+	padding: 1em;
+	display: flex;
+	justify-content: space-between;
 }
 
 .game__player:first-of-type {
-  margin-right: 2em;
+	margin-right: 2em;
 }
 
 .bet-form__label {
-  background-color: var(--blue);
-  color: var(--light);
-  padding: 0.5em 1em;
+	background-color: var(--blue);
+	color: var(--light);
+	padding: 0.5em 1em;
 }
 
 .animal-card {
-  position: relative;
+	position: relative;
 }
 
 .animal-card-img {
-  width: 100%;
-  height: 50%;
+	width: 100%;
+	height: 50%;
 }
 
 .animal-card-points {
-  text-align: center;
-  font-family: "Bowlby One SC", cursive;
-  font-size: 10px;
-  background-color: var(--dark);
-  color: var(--light);
-  padding: 1em;
-  position: absolute;
-  left: 1em;
+	text-align: center;
+	font-family: "Bowlby One SC", cursive;
+	font-size: 10px;
+	background-color: var(--dark);
+	color: var(--light);
+	padding: 1em;
+	position: absolute;
+	left: 1em;
 }
 
 .animal-card-points span {
-  font-size: 25px;
-  display: block;
+	font-size: 25px;
+	display: block;
 }
 
 .game__form {
-  position: relative;
+	position: relative;
 }
 
 .result-overlay {
-  width: fit-content;
-  height: fit-content;
-  position: absolute;
+	width: fit-content;
+	height: fit-content;
+	position: absolute;
 
-  margin: auto;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
+	margin: auto;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	display: flex;
 }
 .result-overlay-color {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
 }
 
 .result__player {
-  display: inline-block;
-  background-color: var(--light);
-  padding: 1em;
-  text-align: center;
-  margin: 0.5em;
+	display: inline-block;
+	background-color: var(--light);
+	padding: 1em;
+	text-align: center;
+	margin: 0.5em;
 }
