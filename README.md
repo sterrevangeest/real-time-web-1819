@@ -20,7 +20,7 @@ Deze API is niet real-time, maar dit los ik op door andere real-time functies in
 
 Dit is de data life cycle van de app:
 
-![](DIAGRAM.png)
+![](diagram.png)
 
 Toelichting:
 
